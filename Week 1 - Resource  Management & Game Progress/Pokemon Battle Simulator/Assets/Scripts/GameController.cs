@@ -5,6 +5,7 @@ using System.Collections;
 public class GameController : MonoBehaviour
 {
     public ResourceController resourceController;
+    public Transform charmander;
 
     public Text tbTurn;
     public int turn;
@@ -33,6 +34,8 @@ public class GameController : MonoBehaviour
         if (resourceController.balls > 0)
         {
             resourceController.balls -= 1;
+
+            Instantiate(charmander, new Vector3(resourceController.balls * 2.0f, 0, 0), Quaternion.identity);
         }
     }
 }
