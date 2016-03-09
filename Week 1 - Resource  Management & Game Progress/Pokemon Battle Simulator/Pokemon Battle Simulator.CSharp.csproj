@@ -84,5 +84,10 @@
     <Compile Include="Assets\Scripts\PokemonController.cs" />
     <Compile Include="Assets\Scripts\ResourceController.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\Outlined-Silhouette Only.shader" />
+    <None Include="Assets\TSF\Shaders\TSF.shader" />
+    <None Include="Assets\TSF\Shaders\TSFOutline.shader" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

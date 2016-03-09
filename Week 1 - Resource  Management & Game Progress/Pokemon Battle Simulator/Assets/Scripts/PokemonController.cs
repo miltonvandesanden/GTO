@@ -7,14 +7,15 @@ public class PokemonController : MonoBehaviour
     public int health;
     public int speed;
     public ArrayList attacks = new ArrayList(4);
+    private PlayerController owner;
 
     // Use this for initialization
-    void Start(string name, int health, int speed, ArrayList attacks)
+    void Start(){}
+
+    public PokemonController(/*ArrayList attacks, PlayerController owner*/)
     {
-        this.name = name;
-        this.health = health;
-        this.speed = speed;
-        this.attacks = attacks;
+        //this.attacks = attacks;
+        //this.owner = owner;
     }
 	
     public bool attack(PokemonController otherPokemon, Attack attack)

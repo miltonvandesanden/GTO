@@ -1,50 +1,70 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 public class GameController : MonoBehaviour
 {
     public PlayerController player1;
-    public PlayerController player2;
-    public Transform blackTile;
-    public Transform whiteTile;
+    //public PlayerController player2;
+    private PlayerController currentPlayer;
 
-    private int currentPlayer = 1;
+    public PokemonController charmander;
+
+    public GameObject panelPokemon;
+
+    public Transform whiteTile;
     private ArrayList tiles = new ArrayList();
+
+    public int gridWidth;
+    public int gridHeight;
 
     public void Start()
     {
-        for (int x = 0; x < 5; x++)
+        for (int x = 0; x < gridWidth; x++)
         {
-            for (int y = 0; y < 5; y++)
+            for (int y = 0; y < gridHeight; y++)
             {
-                //if(x % 2 == 0)
-                //{
-                    if(y % 2 == 0)
-                    {
-                        Instantiate(whiteTile, new Vector3(x, y, 0), Quaternion.identity);
-                    }
-                    else
-                    {
-                        Instantiate(blackTile, new Vector3(x, y, 0), Quaternion.identity);
-                    }
-                //}
-                //else
-                //{
-                    /*
-                    if (y % 2 == 0)
-                    {
-                        Instantiate(whiteTile, new Vector3(x, y, 0), Quaternion.identity);
-                    }
-                    else
-                    {
-                        Instantiate(blackTile, new Vector3(x, y, 0), Quaternion.identity);
-                    }
-                    */
-                //}
+                Instantiate(whiteTile, new Vector3(x, y, 0), Quaternion.identity);
             }
         }
+
+        currentPlayer = player1;
     }
+
+    public void showPokemon()
+    {
+        panelPokemon.SetActive(!panelPokemon.active);
+    }
+
+    public void spawnCharmander()
+    {
+        ArrayList charAttacks = new ArrayList();
+        charAttacks.Add(new Attack("tackle", "normal", 30, 80, 1, 2));
+        charAttacks.Add(new Attack("ember", "fire", 50, 60, 1, 4));
+        charAttacks.Add(new Attack("flamethrower", "fire", 80, 100, 3, 8));
+
+        print("hi");
+        if (currentPlayer == player1)
+        {
+            print("bye");
+            Instantiate(currentPlayer.charmander, new Vector3(5, 9.5f, 4.5f), Quaternion.identity);
+        }
+    }
+
+    public void spawnSquirtle()
+    {
+        ArrayList squirtAttacks = new ArrayList();
+        squirtAttacks.Add(new Attack("tackle", "normal", 30, 80, 1, 2));
+        squirtAttacks.Add(new Attack("bubble beam", "water", 50, 60, 1, 4));
+        squirtAttacks.Add(new Attack("water gun", "water", 80, 100, 3, 8));
+
+        print("hi");
+        if (currentPlayer == player1)
+        {
+            print("bye");
+            Instantiate(currentPlayer.squirtle, new Vector3(0, 9.5f, 4.5f), Quaternion.identity);
+        }
+    }
+
 
     /*
     public ResourceController resourceController;

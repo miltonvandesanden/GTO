@@ -7,13 +7,17 @@ public class Attack
     private string type;
     private int power;
     private int accuracy;
+    private int range;
+    private int cost;
 
-    public Attack(string name, string type, int power, int accuracy)
+    public Attack(string name, string type, int power, int accuracy, int range, int cost)
     {
         this.name = name;
         this.type = type;
         this.power = power;
         this.accuracy = accuracy;
+        this.range = range;
+        this.cost = cost;
     }
 
     public string getName()
