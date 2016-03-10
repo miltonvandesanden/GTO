@@ -3,27 +3,36 @@ using System.Collections;
 
 public class PokemonController : MonoBehaviour
 {
-    public string name;
-    public int health;
-    public int speed;
-    public ArrayList attacks = new ArrayList(4);
+    //public int health;
+    //public int speed;
+    //private ArrayList attacks = new ArrayList(4);
     private PlayerController owner;
 
     // Use this for initialization
     void Start(){}
 
-    public PokemonController(/*ArrayList attacks, PlayerController owner*/)
+    public PlayerController getOwner()
     {
-        //this.attacks = attacks;
-        //this.owner = owner;
-    }
-	
-    public bool attack(PokemonController otherPokemon, Attack attack)
-    {
-        return otherPokemon.getAttacked(attack);
+        return owner;
     }
 
-    public bool getAttacked(Attack attack)
+    public void setOwner(PlayerController owner)
+    {
+        this.owner = owner;
+    }
+
+    /*public PokemonController(ArrayList attacks, PlayerController owner)
+    {
+        this.attacks = attacks;
+        this.owner = owner;
+    }*/
+	
+    /*public bool attack(PokemonController otherPokemon, Attack attack)
+    {
+        return otherPokemon.getAttacked(attack);
+    }*/
+
+    /*public bool getAttacked(Attack attack)
     {
         bool hit = false;
 
@@ -40,5 +49,5 @@ public class PokemonController : MonoBehaviour
         }
 
         return hit;
-    }
+    }*/
 }

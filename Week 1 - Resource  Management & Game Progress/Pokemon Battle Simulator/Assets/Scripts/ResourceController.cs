@@ -13,23 +13,7 @@ public class ResourceController : MonoBehaviour
     public int xp;
 
 	// Use this for initialization
-	void Start()
-    {
-        tbBalls.text = "Balls: " + balls;
-        tbPp.text = "PP: " + pp;
-        tbXp.text = "XP: " + xp;
-    }
-	
+	void Start(){}
 	// FixedUpdate is called once per frame
-	void FixedUpdate()
-    {
-        tbBalls.text = "Balls: " + balls;
-        tbPp.text = "PP: " + pp;
-        tbXp.text = "XP: " + xp;
-	}
-
-    public void endTurn()
-    {
-        pp += 2;
-    }
+	void FixedUpdate(){}
 }
