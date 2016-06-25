@@ -9,7 +9,9 @@ public class GameController : MonoBehaviour
     //game settings
     public int levelWidth;
     public int levelHeight;
+
     public int ppRegen;
+    public float speed;
 
     //players
     public PlayerController player1;
@@ -63,7 +65,8 @@ public class GameController : MonoBehaviour
 
                 if (distance <= currentPlayer.pp && selectedTile.pokemon == null)
                 {
-                    selectedUnit.transform.position = selectedTile.transform.position;
+                    //selectedUnit.transform.position = selectedTile.transform.position;
+                    StartCoroutine(MoveFromTo(selectedUnit, selectedUnit.transform.position, selectedTile.transform.position, speed));
                     currentPlayer.pp -= distance;
 
                     unselectSelection();
@@ -74,6 +77,20 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator MoveFromTo(PokemonController objectToMove, Vector3 startPosition, Vector3 endPosition, float speed)
+    {
+        float step = (speed / (startPosition - endPosition).magnitude) * Time.fixedDeltaTime;
+        float t = 0;
+        while (t <= 1.0f)
+        {
+            t += step; // Goes from 0 to 1, incrementing by step each time
+            objectToMove.transform.position = Vector3.Lerp(startPosition, endPosition, t); // Move objectToMove closer to b
+
+            yield return new WaitForFixedUpdate();         // Leave the routine and return here in the next frame
+        }
+        objectToMove.transform.position = endPosition;
     }
 
     public void generateLevel()
