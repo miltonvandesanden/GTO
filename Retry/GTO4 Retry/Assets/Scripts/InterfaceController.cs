@@ -122,18 +122,36 @@ public class InterfaceController : MonoBehaviour
         attack1Btn.image.color = standardColor;
         attack2Btn.image.color = standardColor;
         attack3Btn.image.color = standardColor;
+
+        attackBtn.image.color = standardColor;
+        moveBtn.image.color = standardColor;
+        spawnBtn.image.color = standardColor;
     }
 
     public void deHighlightUnits()
     {
         if(gameController.player1.currentPokemon != null)
         {
-            gameController.player1.currentPokemon.GetComponent<Renderer>().material.color = gameController.charmander.GetComponent<Renderer>().sharedMaterial.color;
+            if(gameController.player1.currentPokemon.name == "charmander")
+            {
+                gameController.player1.currentPokemon.GetComponent<Renderer>().material.color = gameController.charmander.GetComponent<Renderer>().sharedMaterial.color;
+            }
+            else if(gameController.player1.currentPokemon.name == "bulbasaur")
+            {
+                gameController.player1.currentPokemon.GetComponent<Renderer>().material.color = gameController.bulbasaur.GetComponent<Renderer>().sharedMaterial.color;
+            }
         }
 
         if(gameController.player2.currentPokemon != null)
         {
-            gameController.player2.currentPokemon.GetComponent<Renderer>().material.color = gameController.charmander.GetComponent<Renderer>().sharedMaterial.color;
+            if (gameController.player2.currentPokemon.name == "charmander")
+            {
+                gameController.player2.currentPokemon.GetComponent<Renderer>().material.color = gameController.charmander.GetComponent<Renderer>().sharedMaterial.color;
+            }
+            else if (gameController.player2.currentPokemon.name == "bulbasaur")
+            {
+                gameController.player2.currentPokemon.GetComponent<Renderer>().material.color = gameController.bulbasaur.GetComponent<Renderer>().sharedMaterial.color;
+            }
         }
     }
 
@@ -146,34 +164,57 @@ public class InterfaceController : MonoBehaviour
 
     public void setClickableButtons()
     {
-        if (gameController.currentPlayer.balls > 0)
+        if(!gameController.isMoving)
         {
-            spawnBtn.interactable = true;
-        }
-        else
-        {
-            spawnBtn.interactable = false;
-        }
-
-        if (gameController.currentPlayer.currentPokemon != null)
-        {
-            nextTurnBtn.interactable = true;
-
-            if(gameController.currentPlayer.pp > 0)
+            if (gameController.currentPlayer.balls > 0)
             {
-                //attackBtn.interactable = true;
-                moveBtn.interactable = true;
+                spawnBtn.interactable = true;
             }
             else
             {
-                //attackBtn.interactable = false;
+                spawnBtn.interactable = false;
+            }
+
+            if (gameController.currentPlayer.currentPokemon != null)
+            {
+                nextTurnBtn.interactable = true;
+
+                if (gameController.currentPlayer.pp > 0)
+                {
+                    attackBtn.interactable = true;
+                    moveBtn.interactable = true;
+                }
+            }
+            else
+            {
+                nextTurnBtn.interactable = false;
+                attackBtn.interactable = false;
                 moveBtn.interactable = false;
             }
         }
+    }
+
+    public void btnAttackPressed()
+    {
+        gameController.selectedUnit = gameController.currentPlayer.currentPokemon;
+        gameController.selectedUnit.GetComponent<Renderer>().material.color = selectedColor;
+
+        if(gameController.currentPlayer.pp >= gameController.currentPlayer.currentPokemon.attack1.pp)
+        {
+            attack1Btn.interactable = true;
+            attack1Btn.image.color = selectableColor;
+        }
         else
         {
-            nextTurnBtn.interactable = false;
+            attack1Btn.interactable = false;
         }
+        //attack2Btn.image.color = selectableColor;
+        //attack3Btn.image.color = selectableColor;
+
+        attack1Btn.GetComponentInChildren<Text>().text = gameController.selectedUnit.attack1.name;
+
+        closeAllPanels();
+        attackPanel.SetActive(true);
     }
 
     public void btnMovePressed()
@@ -182,7 +223,17 @@ public class InterfaceController : MonoBehaviour
 
         gameController.selectedUnit.GetComponent<Renderer>().material.color = selectedColor;
 
+        gameController.isMoving = true;
+
         highlightMovableTiles();
+
+        attackBtn.interactable = false;
+        moveBtn.interactable = false;
+        spawnBtn.interactable = false;
+
+        deHighlightGUI();
+        nextTurnBtn.GetComponentInChildren<Text>().text = "Cancel";
+        moveBtn.image.color = selectedColor;
     }
 
     public void btnSpawnPressed()
@@ -199,17 +250,32 @@ public class InterfaceController : MonoBehaviour
     {
         gameController.unselectSelection();
 
-        closeAllPanels();
-        ActionPanel.SetActive(true);
-
         deHighlightTiles();
         deHighlightGUI();
         deHighlightUnits();
+
+        closeAllPanels();
+        ActionPanel.SetActive(true);
     }
 
     public void btnNextTurnPressed()
     {
-        gameController.nextTurn();
+        if(gameController.isMoving)
+        {
+            gameController.unselectSelection();
+
+            deHighlightTiles();
+            deHighlightGUI();
+            deHighlightUnits();
+
+            gameController.isMoving = false;
+
+            nextTurnBtn.GetComponentInChildren<Text>().text = "NEXT TURN";
+        }
+        else
+        {
+            gameController.nextTurn();
+        }
     }
 
     public void btnCharPressed()
@@ -236,6 +302,28 @@ public class InterfaceController : MonoBehaviour
         highlightOwnedTiles();
         bulbBtn.image.color = selectedColor;
 
-        gameController.selectedSpawn = gameController.charmander;
+        gameController.selectedSpawn = gameController.bulbasaur;
+    }
+
+    public void btnAttack1Pressed()
+    {
+        gameController.selectedAttack = gameController.currentPlayer.currentPokemon.attack1;
+
+        deHighlightGUI();
+        attack1Btn.image.color = selectedColor;
+        highlightTilesWithinAttackRange(gameController.selectedAttack);
+    }
+
+    public void highlightTilesWithinAttackRange(Attack attack)
+    {
+        foreach(TileController tile in gameController.getTilesWithinAttackRange(attack))
+        {
+            tile.GetComponent<Renderer>().material.color = selectableColor;
+
+            if (tile.pokemon != null)
+            {
+                tile.pokemon.GetComponent<Renderer>().material.color = selectableColor;
+            }
+        }
     }
 }

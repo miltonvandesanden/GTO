@@ -13,13 +13,14 @@ public class PokemonController : MonoBehaviour
     [HideInInspector]
     public Color originalColor;
 
-    [HideInInspector]
+    //[HideInInspector]
     //0 is down, 1 is left, 2 is up, 3 is right
-    public int direction;
+    //public int direction;
     public int hp;
-    public decimal movementModifier;
+    //public decimal movementModifier;
 
-    public List<Attack> attacks = new List<Attack>();
+    //public List<Attack> attacks = new List<Attack>();
+    public Attack attack1;
 
     // Use this for initialization
     void Start()
@@ -28,10 +29,20 @@ public class PokemonController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update(){}
+    void FixedUpdate(){}
 
     void OnMouseDown()
     {
-        gameController.selectedUnit = this;
+        gameController.selectedTarget = this;
+    }
+
+    public void changeCurrentPokemonHP(int changeHp)
+    {
+        hp += changeHp;
+
+        if(hp <= 0)
+        {
+            owner.despawnPokemon();
+        }
     }
 }
