@@ -40,6 +40,8 @@ public class InterfaceController : MonoBehaviour
     [HideInInspector]
     public Color standardColor = Color.white;
 
+    public Camera camera;
+
     // Use this for initialization
     void Start()
     {
@@ -54,9 +56,43 @@ public class InterfaceController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate()
     {
+        changeCamera();
         setPlayerStats();
         setClickableButtons();
         setTurnInfo();
+
+        if(Input.GetKey(KeyCode.Slash))
+        {
+
+        }
+    }
+
+    public void changeCamera()
+    {
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            camera.transform.Translate(new Vector3(0, 0.1f, 0));
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            camera.transform.Translate(new Vector3(0, -0.1f, 0));
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            camera.transform.Translate(new Vector3(0.1f, 0, 0));
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            camera.transform.Translate(new Vector3(-0.1f, 0, 0));
+        }
+        if (Input.GetKey(KeyCode.RightControl))
+        {
+            camera.transform.Translate(new Vector3(0, 0, 0.1f));
+        }
+        if (Input.GetKey(KeyCode.RightShift))
+        {
+            camera.transform.Translate(new Vector3(0, 0, -0.1f));
+        }
     }
 
     public void setTurnInfo()

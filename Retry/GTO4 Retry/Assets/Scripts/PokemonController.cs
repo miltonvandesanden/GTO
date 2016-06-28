@@ -6,6 +6,7 @@ public class PokemonController : MonoBehaviour
 {
     [HideInInspector]
     public GameController gameController;
+    public ParticleSystem ps;
 
     public string name;
     [HideInInspector]
@@ -33,7 +34,13 @@ public class PokemonController : MonoBehaviour
 
     void OnMouseDown()
     {
-        gameController.selectedTarget = this;
+        if (this != gameController.currentPlayer.currentPokemon && gameController.selectedAttack != null)
+        {
+            if (gameController.isPokemonInAttackRange(gameController.currentPlayer.currentPokemon, this))
+            {
+                gameController.selectedTarget = this;
+            }
+        }
     }
 
     public void changeCurrentPokemonHP(int changeHp)
@@ -42,6 +49,7 @@ public class PokemonController : MonoBehaviour
 
         if(hp <= 0)
         {
+            ps.Emit(100);
             owner.despawnPokemon();
         }
     }

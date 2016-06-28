@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class GameController : MonoBehaviour
     //players
     public PlayerController player1;
     public PlayerController player2;
+
+    public static PlayerController winner;
 
     //prefabs
     public GameObject floortile;
@@ -56,9 +59,28 @@ public class GameController : MonoBehaviour
         generateLevel();
     }
 
+    /*IEnumerator*/ void ChangeLevel(int levelId)
+    {
+        //float fadeTime = gameObject.GetComponent<FadeController>().BeginFade(1);
+        //yield return new WaitForSeconds(fadeTime);
+
+        SceneManager.LoadScene(levelId);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (player1.balls <= 0 && player1.currentPokemon == null)
+        {
+            winner = player2;
+            ChangeLevel(2);
+        }
+        else if(player2.balls <= 0 && player2.currentPokemon == null)
+        {
+            winner = player1;
+            ChangeLevel(2);
+        }
+
         if (selectedTile != null)
         {
             if (selectedSpawn != null)
@@ -131,35 +153,16 @@ public class GameController : MonoBehaviour
         }*/
     }
 
-    IEnumerator rotateFromToo(Camera objectToMove, Vector3 startRotation, Vector3 endRotation, float speed)
+    public bool isPokemonInAttackRange(PokemonController pokemon, PokemonController opponent)
     {
-        float step = (speed / (startRotation - endRotation).magnitude) * Time.fixedDeltaTime;
-        float t = 0;
-        while (t <= 1.0f)
+        if(selectedAttack != null && selectedUnit != null)
         {
-            t += step; // Goes from 0 to 1, incrementing by step each time
-            objectToMove.transform.position = Vector3.Lerp(startRotation, endRotation, t); // Move objectToMove closer to b
-
-            yield return new WaitForFixedUpdate();         // Leave the routine and return here in the next frame
+            if ((opponent.transform.position.x >= selectedUnit.transform.position.x + selectedAttack.minDistance && opponent.transform.position.x <= selectedUnit.transform.position.x + selectedAttack.maxDistance/* && opponent.transform.position.z == selectedUnit.transform.position.z*/) || (opponent.transform.position.x <= selectedUnit.transform.position.x - selectedAttack.minDistance && opponent.transform.position.x >= selectedUnit.transform.position.x - selectedAttack.maxDistance/* && opponent.transform.position.z == selectedUnit.transform.position.z*/) || (opponent.transform.position.z >= selectedUnit.transform.position.z + selectedAttack.minDistance && opponent.transform.position.z <= selectedUnit.transform.position.z + selectedAttack.maxDistance/* && opponent.transform.position.x == selectedUnit.transform.position.x*/) || (opponent.transform.position.z <= selectedUnit.transform.position.z - selectedAttack.minDistance && opponent.transform.position.z >= selectedUnit.transform.position.z - selectedAttack.maxDistance/* && tile.transform.position.x == selectedUnit.transform.position.x*/))
+            {
+                return true;
+            }
         }
-
-        objectToMove.transform.position = endRotation;
-    }
-
-    IEnumerator SpinObject(GameObject go, Quaternion startRotation, Quaternion endRotation)
-    {
-        //float duration = 30f;
-        float elapsed = 0f;
-        float spinSpeed = 1f;
-
-        while (startRotation != endRotation)
-        {
-            elapsed += Time.deltaTime;
-            go.transform.Rotate(Vector3.down, spinSpeed * Time.deltaTime);
-            yield return new WaitForEndOfFrame();
-        }
-
-        yield return null;
+        return false;
     }
 
     public PokemonController getNeighbouringUnit(TileController sourceTile)
@@ -249,10 +252,27 @@ public class GameController : MonoBehaviour
         return result;
     }
 
+    public void FlipCamera(PlayerController player)
+    {
+        if (player == player1)
+        {
+            camera.transform.rotation = Quaternion.Euler(90, 0, 0);
+            camera.transform.Translate(new Vector3(0, 3, 0));
+            camera.backgroundColor = new Color32(255, 50, 50, 255);
+            //Background.transform.rotation = Quaternion.Euler (0, 0, 0);
+        }
+        else
+        {
+            camera.transform.rotation = Quaternion.Euler(90, 180, 0);
+            camera.transform.Translate(new Vector3(0, 3, 0));
+            camera.backgroundColor = Color.cyan;
+            //Background.transform.rotation = Quaternion.Euler (0, 0, 180);
+        }
+
+    }
+
     public void nextTurn()
     {
-        StartCoroutine(SpinObject(camera.gameObject, camera.transform.rotation, new Quaternion(90, 180, 0, 0)));
-
         currentPlayer.pp += ppRegen;
 
         if(player1.currentPokemon == null)
@@ -277,6 +297,8 @@ public class GameController : MonoBehaviour
         interfaceController.deHighlightGUI();
         interfaceController.deHighlightTiles();
         interfaceController.deHighlightUnits();
+
+        FlipCamera(currentPlayer);
     }
 
     public void unselectSelection()

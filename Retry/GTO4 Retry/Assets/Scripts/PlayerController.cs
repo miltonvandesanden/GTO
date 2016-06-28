@@ -35,11 +35,11 @@ public class PlayerController : MonoBehaviour
         tile.pokemon = currentPokemon;
         if(currentPokemon.name == "charmander")
         {
-            currentPokemon.attack1 = new Attack("Ember", -20, 2, 2, 3);
+            currentPokemon.attack1 = new Attack("Ember", -20, 2, 2, 2);
         }
         else if(currentPokemon.name == "bulbasaur")
         {
-            currentPokemon.attack1 = new Attack("Vine Whip", -30, 1, 1, 5);
+            currentPokemon.attack1 = new Attack("Vine Whip", -30, 1, 1, 2);
         }
     }
 
